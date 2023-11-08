@@ -16,6 +16,7 @@ const cdWidth = cd.offsetWidth;
 const nextBtn = $('.btn-next');
 const prevBtn = $('.btn-prev');
 const randomBtn = $('.btn-random');
+const repeatBtn = $('.btn-repeat');
 
 
 
@@ -23,6 +24,7 @@ const app = {
     currentIndex: 0,
     isPlaying: false,
     isRandom: false,
+    isRepeat: false,
     songs:  [
         {
             name: 'Anh đã ổn hơn',
@@ -103,9 +105,9 @@ const app = {
     ],
 
     render: function() {
-        const htmls = this.songs.map((song) => {
+        const htmls = this.songs.map((song, index) => {
             return `
-                <div class="song">
+                <div class="song ${index === this.currentIndex? 'active' : ''}" data-index="${index}">
                 <div class="thumb" style="background-image: url('${song.image}')">
                 </div>
                 <div class="body">
@@ -199,6 +201,8 @@ const app = {
                 app.nextSong();
             }
             audio.play();
+            app.render();
+            app.scrollToActiveSong();
         }
 
         //Handle prev song  & random song
@@ -210,6 +214,8 @@ const app = {
                 app.prevSong();
             }
             audio.play();
+            app.render();
+            app.scrollToActiveSong();
         }
 
         //Handle random song
@@ -217,12 +223,56 @@ const app = {
             app.isRandom = !app.isRandom;
             randomBtn.classList.toggle('active', app.isRandom);
         }
+
+        //Handle repeat song 
+        repeatBtn.onclick = function() {
+            app.isRepeat = !app.isRepeat;
+            repeatBtn.classList.toggle('active', app.isRepeat);
+        }
+
+        //Handle when a song ended 
+        audio.onended = function() {
+            if(app.isRepeat) {
+                audio.play();
+            }
+            else {
+                nextBtn.click();
+            }
+        }
+
+        //Handle when a song in playlist cliked
+        playList.onclick = function(e) {
+            const songNode = e.target.closest('.song:not(.active)') || e.target.closest('.option');
+            if(songNode) {
+                app.currentIndex = Number(songNode.dataset.index);
+                app.loadCurrentSong();
+                app.render();
+                audio.play();
+            }
+        }
     },
 
     loadCurrentSong: function() {
         heading.textContent = this.currentSong.name;
         cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;
         audio.src = this.currentSong.path;
+    },
+
+    scrollToActiveSong: function() {
+        setTimeout(() => {
+            if(this.currentIndex === 0 || this.currentIndex === 1 || this.currentIndex === 2) {
+                $('.song.active').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                })
+            }
+            else {
+                $('.song.active').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                })
+            }
+        },300)
     },
 
     nextSong: function() {
