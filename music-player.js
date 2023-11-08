@@ -10,78 +10,78 @@ const app = {
         {
             name: 'Anh đã ổn hơn',
             singer: 'MCK',
-            path: '../assets/music/song1.mp3',
-            image: '../assets/img/image1.jpg',
+            path: './assets/music/song1.mp3',
+            image: './assets/img/image1.jpg',
         },
 
         {
             name: 'All my ninjas',
             singer: 'Baby Red & Bray',
-            path: '../assets/music/song2.mp3',
-            image: '../assets/img/image2.jpg',
+            path: './assets/music/song2.mp3',
+            image: './assets/img/image2.jpg',
         },
 
 
         {
             name: 'Anh chỉ muốn',
             singer: 'Ronboogz',
-            path: '../assets/music/song3.mp3',
-            image: '../assets/img/image3.jpg',
+            path: './assets/music/song3.mp3',
+            image: './assets/img/image3.jpg',
         },
 
 
         {
             name: 'Hit me up',
             singer: 'Binz',
-            path: '../assets/music/song4.mp3',
-            image: '../assets/img/image4.jpg',
+            path: './assets/music/song4.mp3',
+            image: './assets/img/image4.jpg',
         },
 
 
         {
             name: 'Cuốn cho anh một điếu',
             singer: 'MCK',
-            path: '../assets/music/song5.mp3',
-            image: '../assets/img/image5.jpg',
+            path: './assets/music/song5.mp3',
+            image: './assets/img/image5.jpg',
         },
 
 
         {
             name: 'Đi qua đồi hoa cúc',
             singer: 'PC',
-            path: '../assets/music/song6.mp3',
-            image: '../assets/img/image6.jpg',
+            path: './assets/music/song6.mp3',
+            image: './assets/img/image6.jpg',
         },
 
 
         {
             name: 'Đi qua hoa cúp',
             singer: 'MCK',
-            path: '../assets/music/song7.mp3',
-            image: '../assets/img/image7.jpg',
+            path: './assets/music/song7.mp3',
+            image: './assets/img/image7.jpg',
         },
 
 
         {
             name: 'Tokyo Cypher',
             singer: 'Lil Wuyn & 16 Typh',
-            path: '../assets/music/song8.mp3',
-            image: '../assets/img/image8.jpg',
+            path: './assets/music/song8.mp3',
+            image: './assets/img/image8.jpg',
         },
 
 
         {
             name: 'Sài gòn ơi',
             singer: 'Obito',
-            path: '../assets/music/song9.mp3',
-            image: '../assets/img/image9.jpg',
+            path: './assets/music/song9.mp3',
+            image: './assets/img/image9.jpg',
         },
 
         {
             name: 'Simp gái 808',
             singer: 'Low g',
-            path: '../assets/music/song10.mp3',
-            image: '../assets/img/image10.jpg',
+            path: './assets/music/song10.mp3',
+            image: './assets/img/image10.jpg',
         },
     ],
 
