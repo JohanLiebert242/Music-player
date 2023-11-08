@@ -1,11 +1,28 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const heading = $('header h2');
+const cdThumb = $('.cd-thumb');
+const audio = $('#audio');
+
+const player = $('.player');
+const playBtn = $('.btn-toggle-play');
+const progress = $('#progress');
+
 const playList = $('.playlist');
 const cd = $('.cd');
 const cdWidth = cd.offsetWidth;
+
+const nextBtn = $('.btn-next');
+const prevBtn = $('.btn-prev');
+const randomBtn = $('.btn-random');
+
+
+
 const app = {
     currentIndex: 0,
+    isPlaying: false,
+    isRandom: false,
     songs:  [
         {
             name: 'Anh đã ổn hơn',
@@ -55,7 +72,7 @@ const app = {
 
 
         {
-            name: 'Đi qua hoa cúp',
+            name: 'No love no life',
             singer: 'MCK',
             path: './assets/music/song7.mp3',
             image: './assets/img/image7.jpg',
@@ -104,8 +121,29 @@ const app = {
         playList.innerHTML = htmls.join('');
     },
 
+    defineProperties: function() {
+        Object.defineProperty(this, 'currentSong',  {
+            get: function() {
+                return this.songs[this.currentIndex];
+            }
+        })
+    },
+
     handleEvents: function() {
-        // Ẩn hiện Cd
+        //Cd rotation
+        const cdThumbAnimate = cdThumb.animate([
+            {
+                transform: 'rotate(360deg)',
+            }
+        ], 
+            {
+                duration: 10000,
+                iterations: Infinity,
+            },
+        );
+        cdThumbAnimate.pause();
+
+        // Handle enlarging or shrinking cd
         document.onscroll = function() {
             const scrollTop = window.scrollY || document.documentElement.scrollTop;
             const newCdWidth = cdWidth - scrollTop;
@@ -113,11 +151,118 @@ const app = {
             cd.style.width = newCdWidth > 0 ? newCdWidth + "px" : 0;
             cd.style.opacity = newCdWidth / cdWidth;
            }
+
+         //Handle play btn
+         playBtn.onclick = function() {
+            if(app.isPlaying) {
+                audio.pause();
+            }
+            else {
+                audio.play();
+            }
+         }  
+
+         //Handle playing state
+         audio.onplay = function() {
+            app.isPlaying = true;
+            player.classList.add('playing');
+            cdThumbAnimate.play();
+         }
+
+         //Handle pausing state
+         audio.onpause = function() {
+            app.isPlaying = false;
+            player.classList.remove('playing');
+            cdThumbAnimate.pause();
+         }
+         
+         // Handle progress of songs being changed
+         audio.ontimeupdate = function() {
+            if(audio.duration) {
+                const progressPercentage = Math.floor(audio.currentTime / audio.duration * 100);
+                progress.value = progressPercentage;
+            }
+         }
+
+         // Handle changing the progress
+        progress.onchange = function(e) {
+            const seekTime = audio.duration / 100 * e.target.value;
+            audio.currentTime = seekTime;
+        }
+
+        //Handle next song & random song
+        nextBtn.onclick = function() {
+            if(app.isRandom) {
+                app.randomSong();
+            }
+            else {
+                app.nextSong();
+            }
+            audio.play();
+        }
+
+        //Handle prev song  & random song
+        prevBtn.onclick = function() {
+            if(app.isRandom) {
+                app.randomSong();
+            }
+            else {
+                app.prevSong();
+            }
+            audio.play();
+        }
+
+        //Handle random song
+        randomBtn.onclick = function() {
+            app.isRandom = !app.isRandom;
+            randomBtn.classList.toggle('active', app.isRandom);
+        }
+    },
+
+    loadCurrentSong: function() {
+        heading.textContent = this.currentSong.name;
+        cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;
+        audio.src = this.currentSong.path;
+    },
+
+    nextSong: function() {
+        this.currentIndex++;
+        if(this.currentIndex >= this.songs.length) {
+            this.currentIndex = 0;
+        }
+        this.loadCurrentSong();
+    },
+
+    prevSong: function() {
+        this.currentIndex--;
+        if(this.currentIndex < 0 ) {
+            this.currentIndex = this.songs.length - 1;
+        }
+        this.loadCurrentSong();
+    },
+
+    randomSong: function() {
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * this.songs.length);
+        }while(newIndex === this.currentIndex);
+
+        this.currentIndex = newIndex;
+        this.loadCurrentSong();
     },
 
     start: function() {
+        //Define new Properties for object
+        this.defineProperties();
+
+        //Listen and handle events in DOOM
         this.handleEvents();
-        
+
+
+        //Load the first song into UI when first starting
+        this.loadCurrentSong();
+
+        // Render playlist
         this.render();
     }
 }
